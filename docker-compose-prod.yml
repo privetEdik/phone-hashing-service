@@ -1,0 +1,54 @@
+#version: '3.8'
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile-prod
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB} #slideshowdb
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_HASH_ALGORITHM: ${HASH_ALGORITHM} #"SHA-1" Указание алгоритма хеширования
+      APP_SALT: ${SALT} # "salt_value" Указание соли
+      ALLOWED_NUMBER_OF_COLLISIONS: ${NUMBER_OF_COLLISIONS}
+    env_file:
+      - .env
+    networks:
+      - app-network
+  db:
+    container_name: db
+    image: postgres:13.3
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      POSTGRES_DB: ${POSTGRES_DB} # phone_hashing
+      POSTGRES_USER: ${POSTGRES_USERNAME}  #user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} #password
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+
+
+
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+
+#volumes:
+#  postgres_data:
+#    driver: local

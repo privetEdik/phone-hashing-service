@@ -1,0 +1,28 @@
+#spring.application.name=phone-hashing-service
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL} #jdbc:postgresql://localhost:5432/phone_hashing
+    username: ${SPRING_DATASOURCE_USERNAME} #user
+    password: ${SPRING_DATASOURCE_PASSWORD} #password
+  jpa:
+    hibernate:
+      ddl-auto: update #create-drop
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+#    enabled: true
+    locations: classpath:/db/migration/common,classpath:/db/migration/prod
+    placeholders:
+      hash_algorithm: ${APP_HASH_ALGORITHM}
+      salt: ${APP_SALT}
+    baseline-on-migrate: true
+
+
+
+
+hashing:
+  algorithm: ${APP_HASH_ALGORITHM} # SHA-1, SHA-2, SHA-3
+  salt: ${APP_SALT} #salt_value
+  allowed-number-of-collisions: ${ALLOWED_NUMBER_OF_COLLISIONS} #10
+

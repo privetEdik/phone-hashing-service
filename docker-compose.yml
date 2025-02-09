@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13.3
+    container_name: phone_hashing
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: phone_hashing
+      APP_HASH_ALGORITHM: "SHA-1"  # Указание алгоритма хеширования
+      APP_SALT: "salt_value"    # Указание соли
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+
+#volumes:
+#  postgres_data:
+#    driver: local
