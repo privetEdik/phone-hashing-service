@@ -40,6 +40,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://test-db:5432/test_db
       SPRING_DATASOURCE_USERNAME: test_user
       SPRING_DATASOURCE_PASSWORD: test_pass
+      SPIRIT: zzz
 #    ports:
 #      - "8083:8083"
 #    networks:
