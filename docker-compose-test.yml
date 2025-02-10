@@ -39,6 +39,19 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://test-db:5432/test_db
       SPRING_DATASOURCE_USERNAME: test_user
       SPRING_DATASOURCE_PASSWORD: test_pass
+    ports:
+      - "8083:8083"
+    networks:
+      - my_bridge
+
+networks:
+  my_bridge:
+    driver: bridge
+
+server:
+  port: 8083
+  address: 0.0.0.0
+
 
 
 # команда для запуска в терминале: docker-compose -f docker-compose-test.yml up --abort-on-container-exit
