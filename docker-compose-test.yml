@@ -26,6 +26,7 @@ services:
 #      -c fsync=off
 #      -c full_page_writes=off
 
+
   test-runner:
     container_name: test-runner-phone
     build:
@@ -39,18 +40,18 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://test-db:5432/test_db
       SPRING_DATASOURCE_USERNAME: test_user
       SPRING_DATASOURCE_PASSWORD: test_pass
-    ports:
-      - "8083:8083"
-    networks:
-      - my_bridge
+#    ports:
+#      - "8083:8083"
+#    networks:
+#      - my_bridge
 
 networks:
   my_bridge:
     driver: bridge
 
-server:
-  port: 8083
-  address: 0.0.0.0
+#server:
+#  port: 8083
+#  address: 0.0.0.0
 
 
 

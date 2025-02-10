@@ -24,8 +24,9 @@ spring:
     baseline-on-migrate: true
 #  port:
 
-server:
-  port: 8081
+#server:
+#  port: 8083
+#  address: 0.0.0.0
 
 logging:
   level:
