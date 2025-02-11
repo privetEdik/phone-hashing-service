@@ -1,5 +1,6 @@
 package kettlebell.phonehashingservice.controller;
 
+import kettlebell.phonehashingservice.exception.AppException;
 import kettlebell.phonehashingservice.service.PhoneHashService;
 import kettlebell.phonehashingservice.validator.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Security;
 import java.util.Optional;
 
 @RestController
@@ -20,15 +20,8 @@ public class PhoneHashController {
 
     @PostMapping("/hash")
     public ResponseEntity<String> getHash(@RequestParam String phoneNumber) {
-
-        for (String algorithm : Security.getAlgorithms("MessageDigest")) {
-
-            System.out.println(algorithm);
-
-        }
-
         if (!phoneNumberValidator.isValid(phoneNumber)) {
-            throw new IllegalArgumentException("Phone number must be in the format 380XXXXXXXXX");
+            throw new AppException("Phone number must be in the format 380XXXXXXXXX");
         }
         return ResponseEntity.ok(phoneHashService.getOrCreateHash(phoneNumber));
     }

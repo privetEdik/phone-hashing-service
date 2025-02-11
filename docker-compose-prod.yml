@@ -1,7 +1,6 @@
-#version: '3.8'
 services:
   app:
-    container_name: app
+    container_name: app-phone-hash
     build:
       context: .
       dockerfile: Dockerfile-prod
@@ -15,40 +14,40 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB} #slideshowdb
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      APP_HASH_ALGORITHM: ${HASH_ALGORITHM} #"SHA-1" Указание алгоритма хеширования
+      APP_HASH_ALGORITHM: ${HASH_ALGORITHM} #"SHA1" Указание алгоритма хеширования
       APP_SALT: ${SALT} # "salt_value" Указание соли
       ALLOWED_NUMBER_OF_COLLISIONS: ${NUMBER_OF_COLLISIONS}
-    env_file:
-      - .env
     networks:
       - app-network
   db:
-    container_name: db
+    container_name: phone_hash_db
     image: postgres:13.3
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-      POSTGRES_DB: ${POSTGRES_DB} # phone_hashing
-      POSTGRES_USER: ${POSTGRES_USERNAME}  #user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} #password
-    env_file:
-      - .env
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ["CMD", "pg_isready", "-U", "$POSTGRES_USERNAME", "-d", "$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
-#    restart: always
-    ports:
-      - "5432:5432"
+    restart: always
+    ports:          # оставлю для доступа из вне
+      - "5432:5432" # стоит удалять на прод
+    command: >
+      postgres
+      -c shared_buffers=8GB
+      -c work_mem=1GB
+      -c maintenance_work_mem=2GB
+      -c checkpoint_timeout=30min
+      -c wal_buffers=1GB
+      -c max_wal_size=8GB
     networks:
       - app-network
 
+networks:
+  app-network:
+    driver: bridge
 
-
-
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
-
-#volumes:
-#  postgres_data:
-#    driver: local
+# команда для запуска в терминале контейнеры останутся:
+# docker-compose -f docker-compose-prod.yml up --build

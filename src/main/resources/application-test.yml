@@ -1,41 +1,36 @@
-#spring.application.name=phone-hashing-service
 spring:
   datasource:
     url: jdbc:postgresql://test-db:5432/test_db
     username: test_user
     password: test_pass
     driver-class-name: org.postgresql.Driver
-#    hikari:
-#      maximum-pool-size: 5
   jpa:
     hibernate:
       ddl-auto: none
-    properties:
-      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-        show_sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        show_sql: true
   flyway:
     enabled: true
     locations: classpath:/db/migration/common,classpath:/db/migration/test
     placeholders:
-      hash_algorithm: SHA1 #${APP_HASH_ALGORITHM:SHA-1}
-      salt: salt_value #${APP_SALT:salt_value}
-    baseline-on-migrate: true
-#  port:
-
-#server:
-#  port: 8083
-#  address: 0.0.0.0
+      hash_algorithm: SHA1
+      salt: salt_value
+#    baseline-on-migrate: true
+  application:
+    name: phone-hashing-service-test
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: ERROR
 
 hashing:
-  algorithm: SHA1  #${APP_HASH_ALGORITHM} SHA-1, SHA-2, SHA-3
-  salt: salt_value   # ${APP_SALT}
-  allowed-number-of-collisions: 10
+  algorithm: SHA1
+  salt: salt_value
+  allowed-number-of-collisions: 3
+
+
 
 
 

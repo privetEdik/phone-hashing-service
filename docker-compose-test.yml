@@ -14,18 +14,14 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-    command: >
-      postgres
-      -c shared_buffers=8GB
-      -c work_mem=1GB
-      -c maintenance_work_mem=2GB
-      -c checkpoint_timeout=30min
-      -c wal_buffers=1GB
-      -c max_wal_size=8GB
-#      -c synchronous_commit=off
-#      -c fsync=off
-#      -c full_page_writes=off
-
+#    command: >
+#      postgres
+#      -c shared_buffers=8GB
+#      -c work_mem=1GB
+#      -c maintenance_work_mem=2GB
+#      -c checkpoint_timeout=30min
+#      -c wal_buffers=1GB
+#      -c max_wal_size=8GB
 
   test-runner:
     container_name: test-runner-phone
@@ -40,20 +36,13 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://test-db:5432/test_db
       SPRING_DATASOURCE_USERNAME: test_user
       SPRING_DATASOURCE_PASSWORD: test_pass
-      SPIRIT: zzz
-#    ports:
-#      - "8083:8083"
-#    networks:
-#      - my_bridge
 
 networks:
   my_bridge:
     driver: bridge
 
-#server:
-#  port: 8083
-#  address: 0.0.0.0
+# команда для запуска в терминале контейнеры удалятся сами после прохождения тестов:
+# docker-compose -f docker-compose-test.yml up --abort-on-container-exit
 
-
-
-# команда для запуска в терминале: docker-compose -f docker-compose-test.yml up --abort-on-container-exit
+# команда для запуска в терминале контейнеры останутся:
+# docker-compose -f docker-compose-test.yml up --build

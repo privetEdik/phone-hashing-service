@@ -1,8 +1,10 @@
 package kettlebell.phonehashingservice.service;
 
+import kettlebell.phonehashingservice.HashingConfig;
+import kettlebell.phonehashingservice.exception.AppException;
 import kettlebell.phonehashingservice.repository.PhoneHashRepository;
 import kettlebell.phonehashingservice.repository.entity.PhoneNumberEntity;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -12,23 +14,11 @@ import java.util.Base64;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PhoneHashService {
 
     private final PhoneHashRepository phoneHashRepository;
-
-    @Value("${hashing.algorithm}")
-    private String groupOfAlgorithms;
-
-    @Value("${hashing.salt}")
-    private String salt;
-
-    @Value("${hashing.allowed-number-of-collisions}")
-    private Integer attempt;
-
-    public PhoneHashService(PhoneHashRepository phoneHashRepository) {
-        this.phoneHashRepository = phoneHashRepository;
-    }
-
+    private final HashingConfig hashingConfig;
 
     public String getOrCreateHash(String phoneNumber) {
         byte[] hashBytes = phoneHashRepository.findHashInBytesByPhoneNumber(phoneNumber)
@@ -38,12 +28,12 @@ public class PhoneHashService {
                     int countCollisions = 0;
                     do {
                         saveBytes = generateHashPhoneNumberInBytes(numberPhoneAndDynamicSalt.toString());
-                        numberPhoneAndDynamicSalt.append(System.currentTimeMillis());
+                        numberPhoneAndDynamicSalt.append(hashingConfig.getSalt());
                         countCollisions++;
-                    } while (!phoneHashRepository.existsByHashValue(saveBytes) && countCollisions <= attempt);
+                    } while (phoneHashRepository.existsByHashValue(saveBytes) && countCollisions <= hashingConfig.getAllowedNumberOfCollisions());
 
-                    if (countCollisions >= attempt) {
-                        throw new RuntimeException("Failed to generate a unique hash after 10 attempts");
+                    if (countCollisions > hashingConfig.getAllowedNumberOfCollisions()) {
+                        throw new AppException("Failed to generate a unique hash after 10 attempts");
                     }
 
                     phoneHashRepository.save(new PhoneNumberEntity(phoneNumber, saveBytes));
@@ -56,13 +46,13 @@ public class PhoneHashService {
     private byte[] generateHashPhoneNumberInBytes(String phoneNumber) {
         try {
 
-            Algorithm algorithm = Algorithm.fromName(groupOfAlgorithms);
+            Algorithm algorithm = Algorithm.fromName(hashingConfig.getGroupOfAlgorithms());
 
             MessageDigest digest = MessageDigest.getInstance(algorithm.getAlgorithm());
-            String saltedPhone = phoneNumber + salt;
+            String saltedPhone = phoneNumber + hashingConfig.getSalt();
             return digest.digest(saltedPhone.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Invalid hashing algorithm: " + groupOfAlgorithms, e);
+            throw new AppException("Invalid hashing algorithm: " + hashingConfig.getGroupOfAlgorithms(), e);
         }
 
     }
@@ -73,7 +63,7 @@ public class PhoneHashService {
             byte[] hashInBytes = Base64.getDecoder().decode(hash);
             return phoneHashRepository.findPhoneNumberByHash(hashInBytes);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid Base64 hash format", e);
+            throw new AppException("Invalid Base64 hash format", e);
         }
     }
 

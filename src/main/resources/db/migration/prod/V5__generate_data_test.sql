@@ -1,7 +1,7 @@
 SET app.hash_algorithm = '${hash_algorithm}';
 SET app.salt = '${salt}';
 
--- 4) Цикл на 500
+-- 4) Цикл на 50 000 000
 DO $$
     DECLARE
         i            BIGINT;
@@ -23,7 +23,7 @@ DO $$
         END IF;
 
 
-        FOR i IN 1..500 LOOP
+        FOR i IN 1..500000 LOOP
                 -- Генерация номера телефона: 380 + 9 цифр (заполнение ведущими нулями)
                 phone_number := '380' || LPAD(i::TEXT, 9, '0');
 

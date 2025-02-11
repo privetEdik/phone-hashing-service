@@ -1,25 +1,7 @@
-#FROM maven:3.8.5-openjdk-17 AS builder
-#WORKDIR /app
-#COPY . .
-#RUN mvn clean package -DskipTests
-#
-#CMD ["mvn", "test"]
-
 FROM maven:3.8.5-openjdk-17 AS builder
-
 WORKDIR /app
-
-# Копируем только POM-файл, чтобы установить зависимости (кэширование этого слоя)
 COPY pom.xml ./
-
-# Загружаем зависимости и кешируем их
 RUN mvn dependency:go-offline -B
-
-# Копируем оставшийся исходный код
 COPY src ./src
-
-# Собираем проект (этот шаг не будет повторно выполняться, если код не изменился)
 RUN mvn clean package -DskipTests
-
-# Выполнение тестов
 CMD ["mvn", "test"]
