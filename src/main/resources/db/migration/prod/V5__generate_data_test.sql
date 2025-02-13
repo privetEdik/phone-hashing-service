@@ -1,7 +1,7 @@
 SET app.hash_algorithm = '${hash_algorithm}';
 SET app.salt = '${salt}';
 
--- 4) Цикл на 50 000 000
+
 DO $$
     DECLARE
         i            BIGINT;
@@ -22,8 +22,8 @@ DO $$
             RAISE EXCEPTION 'Unsupported hash algorithm: %', current_setting('app.hash_algorithm');
         END IF;
 
-
-        FOR i IN 1..500000 LOOP
+--  Цикл на 50 000 000
+        FOR i IN 1..50000000 LOOP
                 -- Генерация номера телефона: 380 + 9 цифр (заполнение ведущими нулями)
                 phone_number := '380' || LPAD(i::TEXT, 9, '0');
 

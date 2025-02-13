@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   app:
     container_name: app-phone-hash
@@ -11,11 +12,11 @@ services:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB} #slideshowdb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      APP_HASH_ALGORITHM: ${HASH_ALGORITHM} #"SHA1" Указание алгоритма хеширования
-      APP_SALT: ${SALT} # "salt_value" Указание соли
+      APP_HASH_ALGORITHM: ${HASH_ALGORITHM}
+      APP_SALT: ${SALT}
       ALLOWED_NUMBER_OF_COLLISIONS: ${NUMBER_OF_COLLISIONS}
     networks:
       - app-network

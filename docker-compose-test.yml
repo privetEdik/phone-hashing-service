@@ -1,4 +1,4 @@
-#version: "3.8"
+version: "3.8"
 services:
   test-db:
     image: postgres:13.3
@@ -14,14 +14,6 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-#    command: >
-#      postgres
-#      -c shared_buffers=8GB
-#      -c work_mem=1GB
-#      -c maintenance_work_mem=2GB
-#      -c checkpoint_timeout=30min
-#      -c wal_buffers=1GB
-#      -c max_wal_size=8GB
 
   test-runner:
     container_name: test-runner-phone
@@ -40,9 +32,6 @@ services:
 networks:
   my_bridge:
     driver: bridge
-
-# команда для запуска в терминале контейнеры удалятся сами после прохождения тестов:
-# docker-compose -f docker-compose-test.yml up --abort-on-container-exit
 
 # команда для запуска в терминале контейнеры останутся:
 # docker-compose -f docker-compose-test.yml up --build

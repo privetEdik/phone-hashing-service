@@ -10,8 +10,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: phone_hashing
-#      APP_HASH_ALGORITHM: "SHA-1"  # Указание алгоритма хеширования
-#      APP_SALT: "salt_value"    # Указание соли
+
 
 
 

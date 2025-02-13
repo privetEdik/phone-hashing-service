@@ -1,12 +1,11 @@
-package kettlebell.phonehashingservice;
+package kettlebell.phonehashingservice.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-//@ConfigurationProperties(prefix = "hashing")
-@Data  // Lombok-аннотация для геттеров, сеттеров и других методов
+@Data
 public class HashingConfig {
     @Value("${hashing.algorithm}")
     private String groupOfAlgorithms;

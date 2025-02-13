@@ -16,5 +16,5 @@ public interface PhoneHashRepository extends JpaRepository<PhoneNumberEntity, Lo
 
     @Query("SELECT p.hashValue FROM PhoneNumberEntity p WHERE p.number = :phoneNumber")
     Optional<byte[]> findHashInBytesByPhoneNumber(@Param("phoneNumber") String phoneNumber);
-    boolean existsByHashValue(byte[] hashValue);
+
 }

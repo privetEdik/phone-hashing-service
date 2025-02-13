@@ -1,6 +1,6 @@
 package kettlebell.phonehashingservice.service;
 
-import kettlebell.phonehashingservice.HashingConfig;
+import kettlebell.phonehashingservice.config.HashingConfig;
 import kettlebell.phonehashingservice.exception.AppException;
 import kettlebell.phonehashingservice.repository.PhoneHashRepository;
 import kettlebell.phonehashingservice.repository.entity.PhoneNumberEntity;
