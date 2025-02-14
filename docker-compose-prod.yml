@@ -45,6 +45,11 @@ services:
       -c max_wal_size=8GB
     networks:
       - app-network
+  # Объем памяти (shared_buffers=8GB, work_mem=1GB)
+
+  # Эти параметры эффективны, если твоя машина имеет достаточно оперативной памяти (16 GB+).
+  # Но если ресурсов мало, это может привести к out-of-memory ошибкам.
+  # Проверь объем памяти на проде и уменьши work_mem до 128MB-256MB, если памяти меньше 16 GB.
 
 networks:
   app-network:
